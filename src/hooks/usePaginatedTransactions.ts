@@ -22,7 +22,11 @@ export function usePaginatedTransactions(): PaginatedTransactionsResult {
         return response
       }
 
-      return { data: response.data, nextPage: response.nextPage }
+      return {
+        data: previousResponse.data.concat(response.data),
+        nextPage: response.nextPage,
+        // hasMore: response.hasMore,
+      }
     })
   }, [fetchWithCache, paginatedTransactions])
 

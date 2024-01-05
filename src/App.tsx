@@ -7,6 +7,7 @@ import { usePaginatedTransactions } from "./hooks/usePaginatedTransactions"
 import { useTransactionsByEmployee } from "./hooks/useTransactionsByEmployee"
 import { EMPTY_EMPLOYEE } from "./utils/constants"
 import { Employee } from "./utils/types"
+import { TRANSACTIONS_PER_PAGE } from "./utils/requests"
 
 export function App() {
   const { data: employees, ...employeeUtils } = useEmployees()
@@ -22,11 +23,11 @@ export function App() {
   const loadAllTransactions = useCallback(async () => {
     setIsLoading(true)
     transactionsByEmployeeUtils.invalidateData()
-
+    
+    setIsLoading(false)
     await employeeUtils.fetchAll()
     await paginatedTransactionsUtils.fetchAll()
 
-    setIsLoading(false)
   }, [employeeUtils, paginatedTransactionsUtils, transactionsByEmployeeUtils])
 
   const loadTransactionsByEmployee = useCallback(
@@ -77,7 +78,8 @@ export function App() {
         <div className="RampGrid">
           <Transactions transactions={transactions} />
 
-          {transactions !== null && (
+          {transactions !== null && transactions.length > 0 && !paginatedTransactionsUtils.loading &&
+            transactions.length % TRANSACTIONS_PER_PAGE === 0 && (
             <button
               className="RampButton"
               disabled={paginatedTransactionsUtils.loading}

@@ -16,6 +16,7 @@ export type Employee = {
 export type PaginatedResponse<TData> = {
   data: TData
   nextPage: number | null
+  // hasMore: boolean
 }
 
 export type PaginatedRequestParams = {
