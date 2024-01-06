@@ -7,7 +7,6 @@ import { usePaginatedTransactions } from "./hooks/usePaginatedTransactions"
 import { useTransactionsByEmployee } from "./hooks/useTransactionsByEmployee"
 import { EMPTY_EMPLOYEE } from "./utils/constants"
 import { Employee } from "./utils/types"
-import { TRANSACTIONS_PER_PAGE } from "./utils/requests"
 
 export function App() {
   const { data: employees, ...employeeUtils } = useEmployees()
@@ -78,11 +77,12 @@ export function App() {
         <div className="RampGrid">
           <Transactions transactions={transactions} />
 
-          {transactions !== null && transactions.length > 0 && !paginatedTransactionsUtils.loading &&
-            transactions.length % TRANSACTIONS_PER_PAGE === 0 && (
+          {transactions !== null && paginatedTransactions?.nextPage && (
             <button
               className="RampButton"
-              disabled={paginatedTransactionsUtils.loading}
+              disabled={
+                paginatedTransactionsUtils.loading
+              }
               onClick={async () => {
                 await loadAllTransactions()
               }}
